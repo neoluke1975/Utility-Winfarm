@@ -53,6 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dati_utili.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dati_utili.Designer.cs">
+      <DependentUpon>dati_utili.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,6 +67,15 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="terminali.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="terminali.Designer.cs">
+      <DependentUpon>terminali.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="dati_utili.resx">
+      <DependentUpon>dati_utili.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -73,6 +88,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="terminali.resx">
+      <DependentUpon>terminali.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

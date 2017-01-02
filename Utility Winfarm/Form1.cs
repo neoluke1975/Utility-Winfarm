@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using FirebirdSql.Data.FirebirdClient;
+using System.IO;
+using System.Diagnostics;
 
 namespace Utility_Winfarm
 {
@@ -11,7 +13,21 @@ namespace Utility_Winfarm
         public Form1()
         {
             InitializeComponent();
-
+            ToolTip buttonToolTip = new ToolTip();
+            buttonToolTip.ToolTipTitle = "Atenzione";
+            buttonToolTip.UseFading = true;
+            buttonToolTip.UseAnimation = true;
+            buttonToolTip.IsBalloon = true;
+            buttonToolTip.ShowAlways = true;
+            buttonToolTip.AutoPopDelay = 5000;
+            buttonToolTip.InitialDelay = 1000;
+            buttonToolTip.ReshowDelay = 500;
+            buttonToolTip.SetToolTip(btn_prz_prev, "La Procedura importa i prezzi di vendita discrezionali prevalenti da Linfa/Concept e li inserisce in Prezzo di Listino su Evolution");
+            buttonToolTip.SetToolTip(btn_prevalenti, "La Procedura importa i prezzi di vendita discrezionali maggiori di 0 su Evolution");
+            buttonToolTip.SetToolTip(btnSoglie, "Vengono importate le soglie e il contatore del reintegro");
+            buttonToolTip.SetToolTip(btn_note, "Importazione delle Note sui prodotti");
+            buttonToolTip.SetToolTip(btn_riordino, "Importa riordino prodotto Si/No/Rappresentante");
+            buttonToolTip.SetToolTip(button2, "Importa da un file c:/codici.txt tramite i codici minsan i prodotti gestiti a root");
         }
 
         /*INSERIMENTO NOTE SUI PRODOTTI*/
@@ -158,7 +174,7 @@ namespace Utility_Winfarm
                 int contatore = 0;
                 MySqlConnection connesioneMysql = connmysql();
                 connesioneMysql.Open();
-                MySqlCommand query = new MySqlCommand("select m.CodiceProdotto,m.SogliaReintegro from bf2000.bfmagazzino m where m.SogliaReintegro > 0", connesioneMysql);
+                MySqlCommand query = new MySqlCommand("select m.CodiceProdotto,m.SogliaReintegro,m.contatorereintegro from bf2000.bfmagazzino m where m.SogliaReintegro > 0", connesioneMysql);
                 MySqlDataReader lettore = null;
                 lettore = query.ExecuteReader();
                 while (lettore.Read())
@@ -167,9 +183,11 @@ namespace Utility_Winfarm
 
                     string codice = "";
                     int soglia = 0;
+                    int contatore_reintegro = 0;
                     codice = lettore[0].ToString();
                     soglia = int.Parse(lettore[1].ToString());
-                    inserimento_soglie(codice, soglia);
+                    contatore_reintegro = int.Parse(lettore[2].ToString());
+                    inserimento_soglie(codice, soglia,contatore_reintegro);
                     contatore++;
                 }
                 connesioneMysql.Close();
@@ -182,13 +200,13 @@ namespace Utility_Winfarm
 
         }
 
-        private void inserimento_soglie(string codice, int soglia)
+        private void inserimento_soglie(string codice, int soglia,int contatore_reintegro)
         {
             try
             {
                 FbConnection connesioneFb = connessione();
                 connesioneFb.Open();
-                FbCommand update = new FbCommand("update magazzino set soglia_reintegro=" + soglia + " where km10='" + codice + "'", connesioneFb);
+                FbCommand update = new FbCommand("update magazzino set soglia_reintegro=" + soglia + ",soglia_vendite="+contatore_reintegro+" where km10='" + codice + "'", connesioneFb);
                 update.ExecuteNonQuery();
                 connesioneFb.Close();
             }
@@ -311,7 +329,7 @@ namespace Utility_Winfarm
             {
                 FbConnection connesioneFb = connessione();
                 connesioneFb.Open();
-                FbCommand update = new FbCommand("update magazzino m set m.E_PREZZO_LISTINO = 0 where m.E_PREZZO_LISTINO = (select a.E_PREZZO from anapro a where a.km10 = m.km10)", connesioneFb);
+                FbCommand update = new FbCommand("update magazzino set e_prezzo_listino = 0 where(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > 0 and e_prezzo_listino > 0 and(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) = e_prezzo_listino", connesioneFb);
                 update.ExecuteNonQuery();
                 connesioneFb.Close();
                 MessageBox.Show("update eseguito correttamente");
@@ -395,7 +413,10 @@ namespace Utility_Winfarm
                 MySqlConnection connesioneMysql = connmysql();
                 connesioneMysql.Open();
                 connesioneMysql.Close();
+                btn_testlinfa.BackColor = System.Drawing.Color.Green;
                 MessageBox.Show("connessione a mysql presente");
+                
+               
             }
             catch
             {
@@ -410,8 +431,9 @@ namespace Utility_Winfarm
                 FbConnection connesioneFb = connessione();
                 connesioneFb.Open();
                 connesioneFb.Close();
+                btn_testwinfarm.BackColor = System.Drawing.Color.Green;
                 MessageBox.Show("connessione a firebird presente");
-
+                
             }
             catch
             {
@@ -460,92 +482,339 @@ namespace Utility_Winfarm
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
+        
 
+      
+        //importo da file in c:/clienti.txt con dentro solo minsan i prodotti gestiti a robot
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            int contatore = 0;
+                string minsan;
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+
+            
+            try
+            {
+                FbCommand updatereset = new FbCommand("update magazzino set prodotto_robot = 'N'");
+                updatereset.ExecuteNonQuery();
+                using (StreamReader lettore = new StreamReader("c:/codici.txt"))
+                {
+                    while ((minsan = lettore.ReadLine()) != null)
+                    {
+                        FbCommand updaterobot = new FbCommand("update magazzino set prodotto_robot='S' where km10='" + minsan + "'", connesioneFb);
+                        updaterobot.ExecuteNonQuery();
+                        contatore++;
+                    }
+                    MessageBox.Show("aggiornati " + contatore.ToString() + " prodotti");
+                }
+                connesioneFb.Close();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Problema con importazione");
+              
+            }
+           
+          }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Form terminali = new terminali();
+            terminali.Show();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Form dati_utili = new dati_utili();
+            dati_utili.Show();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.Close();
+
+        }
+
+        private void btnAzzeramentoPuntiCard_Click(object sender, EventArgs e)
+        {
             try
             {
-                int contatore = 0;
-                MySqlConnection connesioneMysql = connmysql();
-                connesioneMysql.Open();
-                MySqlCommand query = new MySqlCommand("select utente,passwordutente,passwordoperatore from bf2000.tabellagrossisti where Descrizione like  'COMIFAR%'", connesioneMysql);
-                MySqlDataReader lettore = null;
-                lettore = query.ExecuteReader();
-                while (lettore.Read())
-
-                {
-
-                    string codice_comifar = lettore[0].ToString();
-                    string password1 = lettore[1].ToString();
-                    string password2 = lettore[2].ToString();
-                    textBox1.Text = codice_comifar;
-                    textBox2.Text = password1;
-                    textBox3.Text = password2;
-
-
-
-
-                }
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update magazzino set punti_catena='0'", connesioneFb);
+                update.ExecuteNonQuery();
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
             }
             catch
             {
+                MessageBox.Show("problema2");
+            }
+        }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            tbx_linfa.Text = Utility_Winfarm.Properties.Settings.Default.percorsoLinfaServer;
+            tbx_passwordLinfa.Text = Utility_Winfarm.Properties.Settings.Default.pwLinfa;
+            tbx_passwordWinfarm.Text = Utility_Winfarm.Properties.Settings.Default.pwWinfarm;
+            tbx_utenteFirebird.Text = Utility_Winfarm.Properties.Settings.Default.utenteWinfarm;
+            tbx_utenteLinfa.Text = Utility_Winfarm.Properties.Settings.Default.utenteLinfa;
+            tbx_winfarmPercorso.Text = Utility_Winfarm.Properties.Settings.Default.percorsoWinfarm;
+            
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Utility_Winfarm.Properties.Settings.Default.percorsoLinfaServer= tbx_linfa.Text;
+            Utility_Winfarm.Properties.Settings.Default.pwLinfa= tbx_passwordLinfa.Text;
+            Utility_Winfarm.Properties.Settings.Default.pwWinfarm= tbx_passwordWinfarm.Text;
+            Utility_Winfarm.Properties.Settings.Default.utenteWinfarm = tbx_utenteFirebird.Text;
+            Utility_Winfarm.Properties.Settings.Default.utenteLinfa= tbx_utenteLinfa.Text;
+            Utility_Winfarm.Properties.Settings.Default.percorsoWinfarm= tbx_winfarmPercorso.Text;
+            Utility_Winfarm.Properties.Settings.Default.Save();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("UPDATE ANAFORN SET ANAFORN.ATTIVA_FIDELITY='S' WHERE ANAFORN.COD_BADGE  > 0", connesioneFb);
+                update.ExecuteNonQuery();
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+        }
+
+        private void btnFidelityDisattiva_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("UPDATE ANAFORN SET ANAFORN.ATTIVA_FIDELITY='N' WHERE ANAFORN.COD_BADGE  = 0", connesioneFb);
+                update.ExecuteNonQuery();
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+        }
+
+        private void button6_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("UPDATE ANAFORN SET ANAFORN.PUNTI_CATENA='0' WHERE ANAFORN.ATTIVA_FIDELITY='N'", connesioneFb);
+                update.ExecuteNonQuery();
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
             }
 
         }
 
-        private void btn_testlinfa_Click_1(object sender, EventArgs e)
+        private void btnEfidelity_Click(object sender, EventArgs e)
         {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update anaforn set codice_card = f_mid(1000000000 + cod_badge, 1, 9) where cod_badge <> 0 and codice_card = ''", connesioneFb);
+                update.ExecuteNonQuery();
+                FbCommand delete = new FbCommand("update anaforn set cod_badge = 0 where codice_card <> ''", connesioneFb);
+                update.ExecuteNonQuery();
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
 
         }
 
-        //private void button2_Click_1(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        int contatore = 0;
-        //        MySqlConnection connesioneMysql = connmysql();
-        //        connesioneMysql.Open();
-        //        MySqlCommand query = new MySqlCommand("SELECT WebCareUserName,WebCarePassword,WebCarePin,WebDpcUserName,WebDpcPassword,pin,webcareurl,webdpcurl FROM " + textBox10.Text + ".tabellaclientitariffazione;", connesioneMysql);
-        //        MySqlDataReader lettore = null;
-        //        lettore = query.ExecuteReader();
-        //        while (lettore.Read())
+        private void btnApreGrid_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                vista.Visible = true;
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand query = new FbCommand("select codkey,deskey,codice_card,cod_badge,punti_catena,f_mid(1000000000 + cod_badge, 1, 9) from anaforn where cod_badge <> 0 or codice_card <> '' order by codice_card, cod_badge", connesioneFb);
+                FbDataAdapter adatta = new FbDataAdapter(query);
+                adatta.Fill(dataSet1, "query");
+                              
+                vista.Height = 602;
+                vista.Width = 855;
+                vista.Visible = Enabled;
+                vista.DataSource = dataSet1;
+                vista.DataMember = "query";
+                vista.AutoResizeColumns();
+                button7.Visible = true;
+                
 
-        //        {
-
-        //            string codice_webcare = lettore[0].ToString();
-        //            string password_webcare = lettore[1].ToString();
-        //            string pinwebcare = lettore[2].ToString();
-        //            string urlWebcare = lettore[6].ToString();
-        //            textBox6.Text = codice_webcare;
-        //            textBox5.Text = password_webcare;
-        //            textBox4.Text = pinwebcare;
-        //            textBox11.Text = urlWebcare;
-
-        //            string codice_webdpc = lettore[3].ToString();
-        //            string password_webdpc = lettore[4].ToString();
-        //            string pinwebdpc = lettore[5].ToString();
-        //            string urlWebdpc = lettore[7].ToString();
-        //            textBox9.Text = codice_webdpc;
-        //            textBox8.Text = password_webdpc;
-        //            textBox7.Text = pinwebdpc;
-        //            textBox12.Text = urlWebdpc;
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
 
 
+        }
 
+        private void button7_Click(object sender, EventArgs e)
+        {
+            vista.Visible = false;
+            button7.Visible = false;
+        }
 
-        //        }
-        //    }
-        //    catch
-        //    {
+        private void button8_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update magazzino set e_prezzo_listino = 0 where(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > 0 and e_prezzo_listino > 0 and(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > e_prezzo_listino", connesioneFb);
+                update.ExecuteNonQuery();
+               
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
 
-        //    }
-        //}
+        }
 
+        private void button9_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update magazzino set e_prezzo_listino = 0 where(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > 0 and e_prezzo_listino > 0", connesioneFb);
+                update.ExecuteNonQuery();
 
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update magazzino set e_prezzo_farmacia = 0, prezzo_farmacia = 0 where(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > 0 and e_prezzo_farmacia >= (select v_euro from vero_prezzo('TODAY', magazzino.km10, 4))", connesioneFb);
+                update.ExecuteNonQuery();
+
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update magazzino set e_prezzo_listino =0 where e_prezzo_farmacia = e_prezzo_listino and e_prezzo_farmacia > 0", connesioneFb);
+                update.ExecuteNonQuery();
+
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update magazzino set magazzino.prezzo_farmacia=0,magazzino.e_prezzo_farmacia = 0 where(km10 in (select magazzino.km10 from magazzino inner join anapro on (magazzino.km10 = anapro.km10) where F_LRTRIM((SELECT V_CLASSE2 FROM VERA_CONC('TODAY', Anapro.KM10))) = 'A')) and (magazzino.e_prezzo_farmacia > 0)", connesioneFb);
+                update.ExecuteNonQuery();
+
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            var data = (dateTimePicker1.Value).ToString("MM/dd/yyyy");
+            try
+                {
+                    
+                    FbConnection connesioneFb = connessione();
+                    connesioneFb.Open();
+                    FbCommand update = new FbCommand("delete from magazzino m where m.km10 in (Select m.km10 FROM MAGAZZINO m, ANAPRO A WHERE A.KM10 = m.KM10 AND m.giac_totale > 0 and m.ult_data_vendita <='"+data+"' and m.ult_data_acquisto <= m.ult_data_vendita)", connesioneFb);
+                    update.ExecuteNonQuery();
+
+                    connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+                
+          
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update magazzino set costo_medio=0, costo_ultimo=0, e_costo_medio=0, e_costo_ultimo=0 where km10 not in (SELECT KM10 FROM ORD_RIGHE)", connesioneFb);
+                update.ExecuteNonQuery();
+
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+        }
     }
 }
