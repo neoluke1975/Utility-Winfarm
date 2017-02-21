@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btn_note = new System.Windows.Forms.Button();
             this.btn_prz_prev = new System.Windows.Forms.Button();
             this.btn_prevalenti = new System.Windows.Forms.Button();
@@ -57,9 +58,8 @@
             this.button5 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.button4 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnRobotImport = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.button3 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnApreGrid = new System.Windows.Forms.Button();
             this.btnAzzeramentoPuntiCard = new System.Windows.Forms.Button();
@@ -68,30 +68,31 @@
             this.btnFidelityAttiva = new System.Windows.Forms.Button();
             this.btnFidelityDisattiva = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.button12 = new System.Windows.Forms.Button();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.button14 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.button15 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.dataSet1 = new System.Data.DataSet();
             this.vista = new System.Windows.Forms.DataGridView();
             this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button12 = new System.Windows.Forms.Button();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.button13 = new System.Windows.Forms.Button();
-            this.button14 = new System.Windows.Forms.Button();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.button15 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vista)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vista)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_note
@@ -446,15 +447,15 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // button2
+            // btnRobotImport
             // 
-            this.button2.Location = new System.Drawing.Point(6, 20);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(111, 40);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "importazione prodotti robot a S";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            this.btnRobotImport.Location = new System.Drawing.Point(6, 20);
+            this.btnRobotImport.Name = "btnRobotImport";
+            this.btnRobotImport.Size = new System.Drawing.Size(111, 40);
+            this.btnRobotImport.TabIndex = 11;
+            this.btnRobotImport.Text = "importazione prodotti robot a S";
+            this.btnRobotImport.UseVisualStyleBackColor = true;
+            this.btnRobotImport.Click += new System.EventHandler(this.btnRobotImport_Click);
             // 
             // groupBox4
             // 
@@ -469,16 +470,6 @@
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Winfarm";
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(121, 20);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(111, 40);
-            this.button3.TabIndex = 14;
-            this.button3.Text = "Terminali";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // groupBox2
             // 
@@ -574,6 +565,131 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Prezzi";
             // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(238, 77);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(110, 51);
+            this.button12.TabIndex = 7;
+            this.button12.Text = "Azzera eventuale prz listino\\farmacia a tutta la Fascia A";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(238, 20);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(110, 51);
+            this.button11.TabIndex = 6;
+            this.button11.Text = "Azzera prezzo listino quando è uguale al prezzo farmacia";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(122, 134);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(110, 51);
+            this.button10.TabIndex = 5;
+            this.button10.Text = "Azzera prz farmacia quando è maggiore del prz di banca dati";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(122, 76);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(110, 51);
+            this.button9.TabIndex = 4;
+            this.button9.Text = "Azzera prezzo listino quando presente il prezzo banca dati";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(122, 19);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(110, 51);
+            this.button8.TabIndex = 3;
+            this.button8.Text = "Azzera prezzo listino quando inferiore a prezzo banca dati";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.BackColor = System.Drawing.Color.Sienna;
+            this.groupBox6.Controls.Add(this.dateTimePicker1);
+            this.groupBox6.Controls.Add(this.button14);
+            this.groupBox6.Controls.Add(this.button13);
+            this.groupBox6.Controls.Add(this.button3);
+            this.groupBox6.Controls.Add(this.btnRobotImport);
+            this.groupBox6.Location = new System.Drawing.Point(366, 16);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(238, 196);
+            this.groupBox6.TabIndex = 20;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Vari";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.CustomFormat = "MM/gg/yyyy";
+            this.dateTimePicker1.Location = new System.Drawing.Point(7, 165);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(225, 20);
+            this.dateTimePicker1.TabIndex = 17;
+            // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(7, 120);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(225, 42);
+            this.button14.TabIndex = 16;
+            this.button14.Text = "Azzera la giac di farmacia l’ultima data vendita < a ▼ a partire da oggi.";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(7, 66);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(225, 48);
+            this.button13.TabIndex = 15;
+            this.button13.Text = "Azzerare giac. farmacia quando il prodotto non più in commercio e il motivo della" +
+    " revoca è diverso da esaurimento scorte";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(121, 20);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(111, 40);
+            this.button3.TabIndex = 14;
+            this.button3.Text = "Terminali";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.BackColor = System.Drawing.Color.Sienna;
+            this.groupBox7.Controls.Add(this.button15);
+            this.groupBox7.Location = new System.Drawing.Point(6, 219);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(354, 93);
+            this.groupBox7.TabIndex = 21;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Costi";
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(9, 19);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(107, 61);
+            this.button15.TabIndex = 0;
+            this.button15.Text = "Azzera costi dei prodotti non presenti nei carichi bolla";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(876, 562);
@@ -611,120 +727,6 @@
             this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(122, 19);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(110, 51);
-            this.button8.TabIndex = 3;
-            this.button8.Text = "Azzera prezzo listino quando inferiore a prezzo banca dati";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(122, 76);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(110, 51);
-            this.button9.TabIndex = 4;
-            this.button9.Text = "Azzera prezzo listino quando presente il prezzo banca dati";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
-            // 
-            // button10
-            // 
-            this.button10.Location = new System.Drawing.Point(122, 134);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(110, 51);
-            this.button10.TabIndex = 5;
-            this.button10.Text = "Azzera prz farmacia quando è maggiore del prz di banca dati";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
-            // 
-            // button11
-            // 
-            this.button11.Location = new System.Drawing.Point(238, 20);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(110, 51);
-            this.button11.TabIndex = 6;
-            this.button11.Text = "Azzera prezzo listino quando è uguale al prezzo farmacia";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            // 
-            // button12
-            // 
-            this.button12.Location = new System.Drawing.Point(238, 77);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(110, 51);
-            this.button12.TabIndex = 7;
-            this.button12.Text = "Azzera eventuale prz listino\\farmacia a tutta la Fascia A";
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.BackColor = System.Drawing.Color.Sienna;
-            this.groupBox6.Controls.Add(this.dateTimePicker1);
-            this.groupBox6.Controls.Add(this.button14);
-            this.groupBox6.Controls.Add(this.button13);
-            this.groupBox6.Controls.Add(this.button3);
-            this.groupBox6.Controls.Add(this.button2);
-            this.groupBox6.Location = new System.Drawing.Point(366, 16);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(238, 196);
-            this.groupBox6.TabIndex = 20;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Vari";
-            // 
-            // button13
-            // 
-            this.button13.Location = new System.Drawing.Point(7, 66);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(225, 48);
-            this.button13.TabIndex = 15;
-            this.button13.Text = "Azzerare giac. farmacia quando il prodotto non più in commercio e il motivo della" +
-    " revoca è diverso da esaurimento scorte";
-            this.button13.UseVisualStyleBackColor = true;
-            // 
-            // button14
-            // 
-            this.button14.Location = new System.Drawing.Point(7, 120);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(225, 42);
-            this.button14.TabIndex = 16;
-            this.button14.Text = "Azzera la giac di farmacia l’ultima data vendita < a ▼ a partire da oggi.";
-            this.button14.UseVisualStyleBackColor = true;
-            this.button14.Click += new System.EventHandler(this.button14_Click);
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.CustomFormat = "MM/gg/yyyy";
-            this.dateTimePicker1.Location = new System.Drawing.Point(7, 165);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(225, 20);
-            this.dateTimePicker1.TabIndex = 17;
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.BackColor = System.Drawing.Color.Sienna;
-            this.groupBox7.Controls.Add(this.button15);
-            this.groupBox7.Location = new System.Drawing.Point(6, 219);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(354, 93);
-            this.groupBox7.TabIndex = 21;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Costi";
-            // 
-            // button15
-            // 
-            this.button15.Location = new System.Drawing.Point(9, 19);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(107, 61);
-            this.button15.TabIndex = 0;
-            this.button15.Text = "Azzera costi dei prodotti non presenti nei carichi bolla";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -736,6 +738,7 @@
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox3);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form1";
@@ -748,10 +751,10 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vista)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vista)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -785,7 +788,7 @@
         private System.Windows.Forms.Button btn_testwinfarm;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnRobotImport;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;

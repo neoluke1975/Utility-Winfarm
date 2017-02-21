@@ -27,7 +27,7 @@ namespace Utility_Winfarm
             buttonToolTip.SetToolTip(btnSoglie, "Vengono importate le soglie e il contatore del reintegro");
             buttonToolTip.SetToolTip(btn_note, "Importazione delle Note sui prodotti");
             buttonToolTip.SetToolTip(btn_riordino, "Importa riordino prodotto Si/No/Rappresentante");
-            buttonToolTip.SetToolTip(button2, "Importa da un file c:/codici.txt tramite i codici minsan i prodotti gestiti a root");
+            buttonToolTip.SetToolTip(btnRobotImport, "Importa da un file c:/codici.txt tramite i codici minsan i prodotti gestiti a root");
         }
 
         /*INSERIMENTO NOTE SUI PRODOTTI*/
@@ -486,37 +486,7 @@ namespace Utility_Winfarm
 
       
         //importo da file in c:/clienti.txt con dentro solo minsan i prodotti gestiti a robot
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            int contatore = 0;
-                string minsan;
-                FbConnection connesioneFb = connessione();
-                connesioneFb.Open();
-
-            
-            try
-            {
-                FbCommand updatereset = new FbCommand("update magazzino set prodotto_robot = 'N'");
-                updatereset.ExecuteNonQuery();
-                using (StreamReader lettore = new StreamReader("c:/codici.txt"))
-                {
-                    while ((minsan = lettore.ReadLine()) != null)
-                    {
-                        FbCommand updaterobot = new FbCommand("update magazzino set prodotto_robot='S' where km10='" + minsan + "'", connesioneFb);
-                        updaterobot.ExecuteNonQuery();
-                        contatore++;
-                    }
-                    MessageBox.Show("aggiornati " + contatore.ToString() + " prodotti");
-                }
-                connesioneFb.Close();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Problema con importazione");
-              
-            }
-           
-          }
+       
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -542,7 +512,7 @@ namespace Utility_Winfarm
             {
                 FbConnection connesioneFb = connessione();
                 connesioneFb.Open();
-                FbCommand update = new FbCommand("update magazzino set punti_catena='0'", connesioneFb);
+                FbCommand update = new FbCommand("update anaforn set punti_catena = 0", connesioneFb);
                 update.ExecuteNonQuery();
                 connesioneFb.Close();
                 MessageBox.Show("update eseguito correttamente");
@@ -652,6 +622,7 @@ namespace Utility_Winfarm
             try
             {
                 vista.Visible = true;
+                dataSet1.Clear();
                 FbConnection connesioneFb = connessione();
                 connesioneFb.Open();
                 FbCommand query = new FbCommand("select codkey,deskey,codice_card,cod_badge,punti_catena,f_mid(1000000000 + cod_badge, 1, 9) from anaforn where cod_badge <> 0 or codice_card <> '' order by codice_card, cod_badge", connesioneFb);
@@ -668,7 +639,8 @@ namespace Utility_Winfarm
                 
 
                 connesioneFb.Close();
-                MessageBox.Show("update eseguito correttamente");
+                
+                
             }
             catch
             {
@@ -815,6 +787,56 @@ namespace Utility_Winfarm
             {
                 MessageBox.Show("problema2");
             }
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("delete from magazzino where km10 in (select m.km10  from magazzino m, anapro a where(a.km10 = m.km10) and m.giac_totale > 0 and (select v_rev from vera_rev('TODAY', m.km10)) not in ('','E','V','X') and(select data_v_rev from vera_rev('today', m.km10)) <= 'today')", connesioneFb);
+                update.ExecuteNonQuery();
+
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+        }
+
+        private void btnRobotImport_Click(object sender, EventArgs e)
+        {      
+                try
+                {
+                    int contatore = 0;
+                    string minsan;
+                    FbConnection connesioneFb = connessione();
+                    connesioneFb.Open();
+                    //FbCommand updatereset = new FbCommand("update magazzino set prodotto_robot = 'N'");
+                    //updatereset.ExecuteNonQuery();
+                    using (StreamReader lettore = new StreamReader("c:/codici.txt"))
+                    {
+                        while ((minsan = lettore.ReadLine()) != null)
+                        {
+                            FbCommand updaterobot = new FbCommand("update magazzino set prodotto_robot='S' where km10='" + minsan + "'", connesioneFb);
+                            updaterobot.ExecuteNonQuery();
+                            contatore++;
+                        }
+                        MessageBox.Show("aggiornati " + contatore.ToString() + " prodotti");
+                    }
+                    connesioneFb.Close();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Problema con importazione");
+
+                }
+
+            
         }
     }
 }
