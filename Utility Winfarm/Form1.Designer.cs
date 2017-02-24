@@ -84,6 +84,7 @@
             this.dataSet1 = new System.Data.DataSet();
             this.vista = new System.Windows.Forms.DataGridView();
             this.button7 = new System.Windows.Forms.Button();
+            this.btnAzzeraPrzVendita = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -550,6 +551,7 @@
             // groupBox5
             // 
             this.groupBox5.BackColor = System.Drawing.Color.Sienna;
+            this.groupBox5.Controls.Add(this.btnAzzeraPrzVendita);
             this.groupBox5.Controls.Add(this.button12);
             this.groupBox5.Controls.Add(this.button11);
             this.groupBox5.Controls.Add(this.button10);
@@ -727,6 +729,16 @@
             this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
+            // btnAzzeraPrzVendita
+            // 
+            this.btnAzzeraPrzVendita.Location = new System.Drawing.Point(238, 134);
+            this.btnAzzeraPrzVendita.Name = "btnAzzeraPrzVendita";
+            this.btnAzzeraPrzVendita.Size = new System.Drawing.Size(110, 51);
+            this.btnAzzeraPrzVendita.TabIndex = 8;
+            this.btnAzzeraPrzVendita.Text = "Azzera tutti i prezzi di vendita";
+            this.btnAzzeraPrzVendita.UseVisualStyleBackColor = true;
+            this.btnAzzeraPrzVendita.Click += new System.EventHandler(this.btnAzzeraPrzVendita_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -816,5 +828,6 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button btnAzzeraPrzVendita;
     }
 }

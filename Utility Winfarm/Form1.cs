@@ -9,12 +9,12 @@ namespace Utility_Winfarm
 {
     public partial class Form1 : Form
     {
-
+        
         public Form1()
         {
             InitializeComponent();
             ToolTip buttonToolTip = new ToolTip();
-            buttonToolTip.ToolTipTitle = "Atenzione";
+            buttonToolTip.ToolTipTitle = "INFORMAZIONE";
             buttonToolTip.UseFading = true;
             buttonToolTip.UseAnimation = true;
             buttonToolTip.IsBalloon = true;
@@ -22,12 +22,34 @@ namespace Utility_Winfarm
             buttonToolTip.AutoPopDelay = 5000;
             buttonToolTip.InitialDelay = 1000;
             buttonToolTip.ReshowDelay = 500;
+            //LINFA
             buttonToolTip.SetToolTip(btn_prz_prev, "La Procedura importa i prezzi di vendita discrezionali prevalenti da Linfa/Concept e li inserisce in Prezzo di Listino su Evolution");
             buttonToolTip.SetToolTip(btn_prevalenti, "La Procedura importa i prezzi di vendita discrezionali maggiori di 0 su Evolution");
             buttonToolTip.SetToolTip(btnSoglie, "Vengono importate le soglie e il contatore del reintegro");
             buttonToolTip.SetToolTip(btn_note, "Importazione delle Note sui prodotti");
             buttonToolTip.SetToolTip(btn_riordino, "Importa riordino prodotto Si/No/Rappresentante");
             buttonToolTip.SetToolTip(btnRobotImport, "Importa da un file c:/codici.txt tramite i codici minsan i prodotti gestiti a root");
+            //WINFARM
+            buttonToolTip.SetToolTip(btn_cancellaprezziListino, "Cancella tutti i prezzi di listino uguali al prezzo Banca Dati");
+            buttonToolTip.SetToolTip(button8, "Cancella tutti i prezzi di listino minori del prezzo di Banca dati");
+            buttonToolTip.SetToolTip(button11, "Cancella tutti i prezzi di listino uguali al prezzo di vendita");
+            buttonToolTip.SetToolTip(btn_cancellaPrezziVendita, "Cancella i prezzi di Vendita se uguali a Banca Dati");
+            buttonToolTip.SetToolTip(button9, "Cancella i prezzi di listino se esiste Banca Dati");
+            buttonToolTip.SetToolTip(button12, "Cancella i prezzi di vendita e di listino dei prodotti di Fascia A");
+            buttonToolTip.SetToolTip(btn_spoastaPrezziVendita, "Sposto il Prezzo di vendita in Prezzo di Listino solo se Listino e Banca dati a zero,e cancello i prezzi di vendita");
+            buttonToolTip.SetToolTip(button10, "Cancello i prezzi Farmacia se presente Prezzo Banca Dati e quest'ultimo e maggiore");
+            buttonToolTip.SetToolTip(button15, "Cancello i costi dei prodotti non presenti in nessuna bolla");
+            buttonToolTip.SetToolTip(btnRobotImport, "Selezionando un file formattato con codici minsan incolonnati va a metterli come prodotti gestiti a Robot");
+            buttonToolTip.SetToolTip(button3, "La procedura che si va ad aprire permette la rinomina dei terminali nel caso si rifaccia una rete per non perdere i dati di setup periferiche varie");
+            buttonToolTip.SetToolTip(button13, "Azzerare giac. farmacia quando il prodotto non più in commercio e il motivo della revoca è diverso da esaurimento scorte");
+            buttonToolTip.SetToolTip(button6, "Attiva il flag Fidelity Card su tutti i clienti che hanno nell'anagrafica un codice badge");
+            buttonToolTip.SetToolTip(btnFidelityDisattiva, "Disattiva il flag Fidelity Card su tutti i clienti che non hanno nell'anagrafica un codice badge");
+            buttonToolTip.SetToolTip(button6, "Azzera i punti sui clienti senza fidelity card");
+            buttonToolTip.SetToolTip(btnAzzeramentoPuntiCard, "Azzera tutti i punti fidelity card");
+            buttonToolTip.SetToolTip(btnEfidelity, "Dopo una conversione da e-fidelity attiva il codice come richiesto da e-fidelity");
+
+
+
         }
 
         /*INSERIMENTO NOTE SUI PRODOTTI*/
@@ -329,7 +351,7 @@ namespace Utility_Winfarm
             {
                 FbConnection connesioneFb = connessione();
                 connesioneFb.Open();
-                FbCommand update = new FbCommand("update magazzino set e_prezzo_listino = 0 where(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > 0 and e_prezzo_listino > 0 and(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) = e_prezzo_listino", connesioneFb);
+                FbCommand update = new FbCommand("update magazzino set e_prezzo_listino = 0 where(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > 0 and e_prezzo_listino > 0 and (select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) = e_prezzo_listino", connesioneFb);
                 update.ExecuteNonQuery();
                 connesioneFb.Close();
                 MessageBox.Show("update eseguito correttamente");
@@ -444,7 +466,7 @@ namespace Utility_Winfarm
 
         private FbConnection connessione()
         {
-            return new FbConnection("User=" + tbx_utenteFirebird.Text + ";Password=" + tbx_passwordWinfarm.Text + ";Database=" + tbx_winfarmPercorso.Text + " ;DataSource=" + tbx_serverWinfarm.Text + ";Port = 3050; Dialect = 3; Charset = NONE; Role =; Connection lifetime = 15; Pooling = true;MinPoolSize = 0; MaxPoolSize = 50; Packet Size = 8192; ServerType = 0; ");
+            return new FbConnection("User=" + Utility_Winfarm.Properties.Settings.Default.utenteWinfarm + ";Password=" + Utility_Winfarm.Properties.Settings.Default.pwWinfarm + ";Database=" + Utility_Winfarm.Properties.Settings.Default.percorsoWinfarm + " ;DataSource=" + Utility_Winfarm.Properties.Settings.Default.serverWinfarm + ";Port = 3050; Dialect = 3; Charset = NONE; Role =; Connection lifetime = 15; Pooling = true;MinPoolSize = 0; MaxPoolSize = 50; Packet Size = 8192; ServerType = 0; ");
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -531,6 +553,7 @@ namespace Utility_Winfarm
             tbx_utenteFirebird.Text = Utility_Winfarm.Properties.Settings.Default.utenteWinfarm;
             tbx_utenteLinfa.Text = Utility_Winfarm.Properties.Settings.Default.utenteLinfa;
             tbx_winfarmPercorso.Text = Utility_Winfarm.Properties.Settings.Default.percorsoWinfarm;
+            tbx_serverWinfarm.Text = Utility_Winfarm.Properties.Settings.Default.serverWinfarm;
             
         }
 
@@ -542,6 +565,7 @@ namespace Utility_Winfarm
             Utility_Winfarm.Properties.Settings.Default.utenteWinfarm = tbx_utenteFirebird.Text;
             Utility_Winfarm.Properties.Settings.Default.utenteLinfa= tbx_utenteLinfa.Text;
             Utility_Winfarm.Properties.Settings.Default.percorsoWinfarm= tbx_winfarmPercorso.Text;
+            Utility_Winfarm.Properties.Settings.Default.serverWinfarm = tbx_serverWinfarm.Text;
             Utility_Winfarm.Properties.Settings.Default.Save();
         }
 
@@ -662,7 +686,7 @@ namespace Utility_Winfarm
             {
                 FbConnection connesioneFb = connessione();
                 connesioneFb.Open();
-                FbCommand update = new FbCommand("update magazzino set e_prezzo_listino = 0 where(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > 0 and e_prezzo_listino > 0 and(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > e_prezzo_listino", connesioneFb);
+                FbCommand update = new FbCommand("update magazzino set e_prezzo_listino = 0 where (select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > 0 and e_prezzo_listino > 0 and(select v_euro from vero_prezzo('TODAY', magazzino.km10, 4)) > e_prezzo_listino", connesioneFb);
                 update.ExecuteNonQuery();
                
                 connesioneFb.Close();
@@ -714,6 +738,7 @@ namespace Utility_Winfarm
 
         private void button11_Click(object sender, EventArgs e)
         {
+           
             try
             {
                 FbConnection connesioneFb = connessione();
@@ -736,7 +761,7 @@ namespace Utility_Winfarm
             {
                 FbConnection connesioneFb = connessione();
                 connesioneFb.Open();
-                FbCommand update = new FbCommand("update magazzino set magazzino.prezzo_farmacia=0,magazzino.e_prezzo_farmacia = 0 where(km10 in (select magazzino.km10 from magazzino inner join anapro on (magazzino.km10 = anapro.km10) where F_LRTRIM((SELECT V_CLASSE2 FROM VERA_CONC('TODAY', Anapro.KM10))) = 'A')) and (magazzino.e_prezzo_farmacia > 0)", connesioneFb);
+                FbCommand update = new FbCommand("update magazzino m set m.prezzo_farmacia = 0,m.e_prezzo_farmacia = 0,m.e_prezzo_listino = 0 where(km10 in (select m.km10 from magazzino m inner join anapro a on (m.km10 = a.km10) where F_LRTRIM((SELECT V_CLASSE2 FROM VERA_CONC('TODAY', A.KM10))) = 'A')) and(m.e_prezzo_farmacia > 0)", connesioneFb);
                 update.ExecuteNonQuery();
 
                 connesioneFb.Close();
@@ -809,7 +834,11 @@ namespace Utility_Winfarm
         }
 
         private void btnRobotImport_Click(object sender, EventArgs e)
-        {      
+        {
+            OpenFileDialog dialogo = new OpenFileDialog();
+            if (dialogo.ShowDialog() == DialogResult.OK)
+            {
+
                 try
                 {
                     int contatore = 0;
@@ -818,7 +847,7 @@ namespace Utility_Winfarm
                     connesioneFb.Open();
                     //FbCommand updatereset = new FbCommand("update magazzino set prodotto_robot = 'N'");
                     //updatereset.ExecuteNonQuery();
-                    using (StreamReader lettore = new StreamReader("c:/codici.txt"))
+                    using (StreamReader lettore = new StreamReader(dialogo.OpenFile()))
                     {
                         while ((minsan = lettore.ReadLine()) != null)
                         {
@@ -835,8 +864,28 @@ namespace Utility_Winfarm
                     MessageBox.Show("Problema con importazione");
 
                 }
+            }
 
             
+        }
+
+        private void btnAzzeraPrzVendita_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FbConnection connesioneFb = connessione();
+                connesioneFb.Open();
+                FbCommand update = new FbCommand("update magazzino set E_PREZZO_FARMACIA = 0, PREZZO_FARMACIA = 0", connesioneFb);
+                update.ExecuteNonQuery();
+
+                connesioneFb.Close();
+                MessageBox.Show("update eseguito correttamente");
+            }
+            catch
+            {
+                MessageBox.Show("problema2");
+            }
+
         }
     }
 }

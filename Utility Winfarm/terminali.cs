@@ -18,7 +18,7 @@ namespace Utility_Winfarm
         {
             InitializeComponent();
             ToolTip buttonToolTip = new ToolTip(); 
-            buttonToolTip.ToolTipTitle="Atenzione"; 
+            buttonToolTip.ToolTipTitle="Attenzione"; 
             buttonToolTip.UseFading = true; 
             buttonToolTip.UseAnimation = true; 
             buttonToolTip.IsBalloon = true; 
@@ -26,19 +26,18 @@ namespace Utility_Winfarm
             buttonToolTip.AutoPopDelay = 5000; 
             buttonToolTip.InitialDelay = 1000; 
             buttonToolTip.ReshowDelay = 500; 
-            buttonToolTip.SetToolTip(button1, "la funzione importa da un file in c:/codici.txt che abbia solo un elenco di codici minsan da portare a SI come gestione robot");
-            buttonToolTip.SetToolTip(button2, "prova");
+            buttonToolTip.SetToolTip(button2, "");
         }
        
         private FbConnection connessione()
         {
-            return new FbConnection("User=" + tbx_utenteFirebird.Text + ";Password=" + tbx_passwordWinfarm.Text + ";Database=" + tbx_winfarmPercorso.Text + " ;DataSource=" + tbx_serverWinfarm.Text + ";Port = 3050; Dialect = 3; Charset = NONE; Role =; Connection lifetime = 15; Pooling = true;MinPoolSize = 0; MaxPoolSize = 50; Packet Size = 8192; ServerType = 0; ");
+            return new FbConnection("User=" + Properties.Settings.Default.utenteWinfarm.ToString() + ";Password=" + Properties.Settings.Default.pwWinfarm.ToString() + ";Database=" + Properties.Settings.Default.percorsoWinfarm.ToString() + " ;DataSource=" + Properties.Settings.Default.serverWinfarm.ToString() + ";Port = 3050; Dialect = 3; Charset = NONE; Role =; Connection lifetime = 15; Pooling = true;MinPoolSize = 0; MaxPoolSize = 50; Packet Size = 8192; ServerType = 0; ");
         }
         private void button1_Click(object sender, EventArgs e)
         {
             FbConnection conn = connessione();
             conn.Open();
-            FbCommand query = new FbCommand("select nome from terminali", conn);
+            FbCommand query = new FbCommand("select nome,ip from terminali", conn);
             FbDataAdapter adatta = new FbDataAdapter(query);
             adatta.Fill(dataSet1, "terminali");
             adatta.Fill(dataSet2, "variazione");
@@ -51,26 +50,8 @@ namespace Utility_Winfarm
             dataGridView2.AutoResizeColumns();
             conn.Close();
         }
-
-     
-        private void btn_testwinfarm_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                FbConnection connesioneFb = connessione();
-                connesioneFb.Open();
-                connesioneFb.Close();
-                btn_testwinfarm.BackColor = System.Drawing.Color.Green;
-                MessageBox.Show("connessione a firebird presente");
-
-            }
-            catch
-            {
-                MessageBox.Show("connessione a firebird assente");
-            }
-
-        }
-
+             
+        
         private void button2_Click(object sender, EventArgs e)
         {
             FbConnection conn = connessione();
@@ -78,7 +59,7 @@ namespace Utility_Winfarm
           
             for (int i = 0; i < dataGridView2.RowCount-1; i++)
             {
-                FbCommand update_terminali = new FbCommand("update terminali set nome='" + (dataGridView2.Rows[i].Cells[0].Value).ToString() + "' where nome='" + (dataGridView1.Rows[i].Cells[0].Value).ToString() + "'",conn);
+                FbCommand update_terminali = new FbCommand("update terminali set nome='" + (dataGridView2.Rows[i].Cells[0].Value).ToString().ToUpper() +"',ip='"+ (dataGridView2.Rows[i].Cells[1].Value).ToString() + "' where nome='" + (dataGridView1.Rows[i].Cells[0].Value).ToString().ToUpper() + "'",conn);
                 update_terminali.ExecuteNonQuery();
             }
             conn.Close();
@@ -89,12 +70,6 @@ namespace Utility_Winfarm
             this.Close();
         }
 
-        private void terminali_Load(object sender, EventArgs e)
-        {
-            tbx_passwordWinfarm.Text = Utility_Winfarm.Properties.Settings.Default.pwWinfarm;
-            tbx_serverWinfarm.Text = Utility_Winfarm.Properties.Settings.Default.serverWinfarm;
-            tbx_utenteFirebird.Text = Utility_Winfarm.Properties.Settings.Default.utenteWinfarm;
-            tbx_winfarmPercorso.Text = Utility_Winfarm.Properties.Settings.Default.percorsoWinfarm;
-        }
+       
     }
 }

@@ -123,6 +123,9 @@
   <metadata name="dataSet2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>116, 17</value>
   </metadata>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>Cliccare sul tasto "Dati Winfarm" per richiedere  i Nomi dei terminali in uso, nella box alla vostra destra andate ad inserire  il nuovo nome che il PC prenderà alla fine cliccate su "AGGIORNA" per rendere effettive le modifiche.In questo modo rinominando i pc(rifacimento rete) l'utente rientra senza perdere i parametri di SETUP PERIFERICHE VARIE</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

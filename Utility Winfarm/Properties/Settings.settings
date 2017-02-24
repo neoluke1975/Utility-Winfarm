@@ -9,7 +9,7 @@
       <Value Profile="(Default)">c:/program files (x86)/winfarm/archivi/arc2000.phs</Value>
     </Setting>
     <Setting Name="serverWinfarm" Type="System.String" Scope="User">
-      <Value Profile="(Default)">server</Value>
+      <Value Profile="(Default)">localhost</Value>
     </Setting>
     <Setting Name="utenteLinfa" Type="System.String" Scope="User">
       <Value Profile="(Default)">root</Value>
